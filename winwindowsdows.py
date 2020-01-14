@@ -1,6 +1,5 @@
 import sys
 
-import PyQt5
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -12,7 +11,7 @@ class CustomWindow(QMainWindow):
     def paintEvent(self, event=None):
         painter = QPainter(self)
         size = 50
-        image = QImage('res.png') # TODO add default image
+        image = QImage('res.png')
         if not image.isNull():
             painter.setOpacity(0.0)
             painter.setBrush(Qt.white)
@@ -41,16 +40,37 @@ def show_webcam(win, mirror=True):
             break  # esc to quit
     cv2.destroyAllWindows()
 
-app = QApplication(sys.argv)
 
-# Create the main window
-window = CustomWindow()
+def start():
+    app = QApplication([])
+    app.setQuitOnLastWindowClosed(False)
 
-window.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.WindowTransparentForInput)
-window.setAttribute(Qt.WA_NoSystemBackground, True)
-window.setAttribute(Qt.WA_TranslucentBackground, True)
+    # Create the main window
+    window = CustomWindow()
+    window.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.WindowTransparentForInput | Qt.Tool)
+    window.setAttribute(Qt.WA_NoSystemBackground, True)
+    window.setAttribute(Qt.WA_TranslucentBackground, True)
 
-# Run the application
-window.showFullScreen()
-show_webcam(window)
-sys.exit(app.exec_())
+    tray = QSystemTrayIcon()
+
+    if tray.isSystemTrayAvailable():
+        tray.setIcon(QIcon("winwindowsdows.ico"))
+        tray.setVisible(True)
+        menu = QMenu()
+        action = QAction("Exit WinWindowsdows")
+        action.triggered.connect(sys.exit)
+        menu.addAction(action)
+        tray.setContextMenu(menu)
+        tray.show()
+    else:
+        tray = None
+
+
+    # Run the application
+    window.showFullScreen()
+    show_webcam(window)
+    sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    start()
