@@ -1,10 +1,10 @@
 import sys
 
+import cv2
+import numpy as np
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-import cv2
-import numpy as np
 
 
 class CustomWindow(QMainWindow):
@@ -20,9 +20,21 @@ class CustomWindow(QMainWindow):
             painter.setOpacity(1.0)
             painter.begin(image)
             painter.drawImage(self.rect(), image)
+            painter.setBrush(Qt.lightGray)
+            painter.setPen(QPen(Qt.lightGray))
+            painter.drawRect(0, self.frameGeometry().height() / 2 - size / 2 + 10, self.frameGeometry().width(), size)
             painter.setBrush(Qt.white)
             painter.setPen(QPen(Qt.white))
             painter.drawRect(0, self.frameGeometry().height() / 2 - size / 2, self.frameGeometry().width(), size)
+            painter.setBrush(Qt.lightGray)
+            painter.setPen(QPen(Qt.lightGray))
+            painter.drawRect(self.frameGeometry().width() / 2 - size / 2 + 10, 0, size,
+                             self.frameGeometry().height() / 2 - size / 2)
+            painter.drawRect(self.frameGeometry().width() / 2 - size / 2 + 10,
+                             self.frameGeometry().height() / 2 + size / 2 + 10, size,
+                             self.frameGeometry().height() / 2 - size / 2)
+            painter.setBrush(Qt.white)
+            painter.setPen(QPen(Qt.white))
             painter.drawRect(self.frameGeometry().width() / 2 - size / 2, 0, size, self.frameGeometry().height())
 
 
@@ -32,7 +44,7 @@ def show_webcam(win, mirror=True):
         ret_val, img = cam.read()
         if mirror:
             img = cv2.flip(img, 1)
-        alpha = np.full_like(img[..., 0], 5)
+        alpha = np.full_like(img[..., 0], 20)
         bgra = cv2.merge((img, alpha))
         cv2.imwrite('res.png', bgra)
         win.repaint()
