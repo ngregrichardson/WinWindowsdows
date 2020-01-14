@@ -10,6 +10,6 @@ Well, lucky for you, WinWindowsdows is here. WinWindowsdows is a simple program 
 _* we did not_
 
 ## Installing
-1. Download WinWindowsdows for Windows here.
+1. Download the latest WinWindowsdows for Windows [here](https://github.com/ngregrichardson/WinWindowsdows/releases).
 2. Extract the _.zip_ file where you would like to store WinWindowsdows
 3. Run the _.exe_ file
